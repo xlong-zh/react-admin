@@ -2,39 +2,31 @@ import { Home } from 'app/Main/Modules/Home';
 import { User } from 'app/Main/Modules/User';
 import { Profile } from 'app/Main/Modules/Config/Profile';
 import { Website } from 'app/Main/Modules/Config/Website';
-// import {
-//   HomeOutlined,
-//   MoneyCollectOutlined,
-//   UserOutlined,
-//   SettingOutlined,
-//   Html5Outlined,
-//   ProfileOutlined,
-//   PayCircleOutlined
-// } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, SettingOutlined, Html5Outlined, ProfileOutlined } from '@ant-design/icons';
 
 export const ModulesRouters = [
   {
     name: 'Home',
-    // icon: HomeOutlined,
+    icon: HomeOutlined,
     component: Home,
     path: '/',
     exact: true,
   },
   {
     name: 'User',
-    // icon: UserOutlined,
+    icon: UserOutlined,
     component: User,
     path: '/user',
     exact: true,
   },
   {
     name: 'Config',
-    // icon: SettingOutlined,
+    icon: SettingOutlined,
     exact: true,
   },
   {
     parentName: 'Config',
-    // icon: ProfileOutlined,
+    icon: ProfileOutlined,
     name: 'Profile',
     component: Profile,
     path: '/config/profile',
@@ -42,7 +34,7 @@ export const ModulesRouters = [
   },
   {
     parentName: 'Config',
-    // icon: Html5Outlined,
+    icon: Html5Outlined,
     name: 'Website',
     component: Website,
     path: '/config/website',

@@ -22,7 +22,7 @@ export function makeRouterTree(routers, parentKey = 'parentName', childrenKey = 
       r.push(i);
     }
   });
-
+  console.log(r);
   return r;
 }
 

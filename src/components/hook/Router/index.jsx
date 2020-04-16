@@ -6,7 +6,12 @@ const RouterContext = React.createContext({});
 export const CustomBrowserRouter = ({ children }) => {
   return (
     <BrowserRouter>
-      <Route>{p => <RouterContext.Provider value={p}>{children}</RouterContext.Provider>}</Route>
+      <Route>
+        {(p) => {
+          // console.log(p);
+          return <RouterContext.Provider value={p}>{children}</RouterContext.Provider>;
+        }}
+      </Route>
     </BrowserRouter>
   );
 };

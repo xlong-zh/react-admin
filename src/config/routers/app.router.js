@@ -1,5 +1,5 @@
 import { Login } from 'app/Login';
-import { Main } from 'app/Main';
+import { SiderDemo } from 'app/Main';
 
 export const AppRouters = [
   {
@@ -11,7 +11,7 @@ export const AppRouters = [
   },
   {
     name: 'Main',
-    component: Main,
+    component: SiderDemo,
     path: '/',
     exact: false,
     private: true,

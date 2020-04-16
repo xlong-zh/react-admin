@@ -1,6 +1,6 @@
 import React from 'react';
-import { TOKEN_KEY } from 'consts';
-import { routersMap } from 'config/routers';
+// import { TOKEN_KEY } from 'consts';
+// import { routersMap } from 'config/routers';
 import { withRouter } from 'react-router-dom';
 
 export function HocPrivate(C) {

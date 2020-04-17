@@ -1,6 +1,9 @@
-import React from 'react';
-import './user.scss';
+import React, { useState, useEffect } from 'react';
+import styles from './user.module.scss';
 
-export const User = ({ children }) => {
-  return <div className="user">this is user</div>;
+export const User = () => {
+  return <div className="user">
+    <h2>用户中心</h2>
+    
+  </div>;
 };

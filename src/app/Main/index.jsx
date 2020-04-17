@@ -1,11 +1,12 @@
 import React from 'react';
-import './main.scss';
+import styles from './main.module.scss';
 import { Route, Switch } from 'react-router-dom';
 import { ModulesRouters } from 'config/routers';
 import { Sidebar } from './Sidebar';
-// import { Header } from './Header';
+import { HeaderBar } from './HeaderBar';
+// import { Crumb } from 'components/Crumb';
+import { NavTags } from 'components/NavTags';
 import { Layout } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,25 +25,24 @@ class SiderDemo extends React.Component {
     return (
       <Layout>
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-          <div className="logo">Logo</div>
+          <div className={styles.logo}>Logo</div>
           <Sidebar />
         </Sider>
-        <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: 0 }}>
-            {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-              className: 'trigger',
-              onClick: this.toggle,
-            })}
-            this is a header
+        <Layout className={styles.site_layout}>
+          <Header className={styles.site_layout_background} style={{ padding: 0 }}>
+            <HeaderBar collapsed={this.state.collapsed} toggle={this.toggle} />
           </Header>
+
           <Content
-            className="site-layout-background"
+            className={styles.site_layout_background}
             style={{
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
             }}
           >
+            {/* <Crumb/> */}
+            <NavTags />
             <Switch>
               {ModulesRouters.map((i, idx) => {
                 if (i.component) {

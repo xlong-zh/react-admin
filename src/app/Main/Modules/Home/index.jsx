@@ -1,8 +1,8 @@
 import React from 'react';
-import './home.scss'
+import styles from './home.module.scss';
 
-export const Home = ({ children }) => {
-  return <div className='home'>
-    this is home
+export const Home = () => {
+  return <div className={styles.home}>
+    这是首页
   </div>;
 };

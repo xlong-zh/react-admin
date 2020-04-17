@@ -1,0 +1,27 @@
+.headerbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 30px;
+  .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .trigger:hover {
+    color: #1890ff;
+  }
+  :global {
+    .ant-menu-submenu-active {
+      background-color: #f2f2f2 !important;
+      border-bottom-color: transparent !important;
+    }
+    .ant-menu-item-active {
+      background-color: #f2f2f2 !important;
+      border-bottom-color: transparent !important;
+    }
+  }
+}

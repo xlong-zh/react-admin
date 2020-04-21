@@ -43,6 +43,7 @@ const SidebarCs = () => {
 
   const [selectedKeys, setSelectedKeys] = useState(['Home']);
   const [openKeys, setOpenKeys] = useState([]);
+
   useEffect(() => {
     if (currentRoute.name !== selectedKeys[0]) {
       setSelectedKeys([currentRoute.name]);

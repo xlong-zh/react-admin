@@ -40,4 +40,25 @@ export const ModulesRouters = [
     path: '/config/website',
     exact: true,
   },
+  {
+    name: 'Config2',
+    icon: SettingOutlined,
+    exact: true,
+  },
+  {
+    parentName: 'Config2',
+    icon: ProfileOutlined,
+    name: 'Profile2',
+    component: Profile,
+    path: '/config/profile2',
+    exact: true,
+  },
+  {
+    parentName: 'Config2',
+    icon: Html5Outlined,
+    name: 'Website2',
+    component: Website,
+    path: '/config/website2',
+    exact: true,
+  },
 ];

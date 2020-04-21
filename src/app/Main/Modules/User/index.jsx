@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styles from './user.module.scss';
+import React from 'react';
+// import styles from './user.module.scss';
 
 export const User = () => {
   return <div className="user">

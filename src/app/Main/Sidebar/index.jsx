@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu } from 'antd';
 import { routersMap } from 'config/routers';
 import { modulesRouterTree } from 'config/routers';
-// import { useRouter } from 'components/hook/Router';
-// import { useHistory } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { useRouter } from 'components/hook/Router';
+// import { withRouter } from 'react-router-dom';
 
 const { SubMenu } = Menu;
 
@@ -38,27 +37,45 @@ function makeMenuTree(tree) {
   });
 }
 
-class SidebarCs extends React.Component {
-  handleClickItem = (e) => {
+const SidebarCs = () => {
+  const router = useRouter();
+  const currentRoute = routersMap.getRouterByPath(router.location.pathname);
+
+  const [selectedKeys, setSelectedKeys] = useState(['Home']);
+  const [openKeys, setOpenKeys] = useState([]);
+  useEffect(() => {
+    if (currentRoute.name !== selectedKeys[0]) {
+      setSelectedKeys([currentRoute.name]);
+    }
+    // 只有2级菜单可用
+    if (currentRoute.parentName) {
+      setOpenKeys([currentRoute.parentName]);
+    } else {
+      setOpenKeys([]);
+    }
+  }, [router.location.pathname]);
+
+  const handleClickItem = (e) => {
     const path = routersMap.getPathByName(e.key);
-    // console.log(this.props);
-    // useHistory().push(path);
-    this.props.history.push(path);
+    router.history.push(path);
   };
-  render() {
-    return (
-      <div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          // defaultSelectedKeys={['1']}
-          // defaultOpenKeys={['sub1']}
-          onClick={this.handleClickItem}
-        >
-          {makeMenuTree(modulesRouterTree)}
-        </Menu>
-      </div>
-    );
-  }
-}
-export const Sidebar = withRouter(SidebarCs);
+  const handleOpenMenu = (e) => {
+    setOpenKeys(e);
+  };
+  return (
+    <div>
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={selectedKeys}
+        openKeys={openKeys}
+        onClick={handleClickItem}
+        onOpenChange={handleOpenMenu}
+      >
+        {makeMenuTree(modulesRouterTree)}
+      </Menu>
+    </div>
+  );
+};
+
+export const Sidebar = SidebarCs;

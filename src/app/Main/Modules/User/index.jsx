@@ -7,8 +7,19 @@ import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 export const User = () => {
+  const [search_form] = Form.useForm();
   const editUserModal = useRef(null);
-
+  const pagination = {
+    defaultCurrent: 1,
+    defaultPageSize: 20,
+    pageSizeOptions: ['5', '10', '20', '30'],
+    showTotal: (total, range) => {
+      return range[0] + '-' + range[1] + ' 共' + total + '条';
+    },
+    showQuickJumper: true,
+    showSizeChanger: true,
+    total: 500,
+  };
   const columns = [
     {
       title: '用户账号',
@@ -132,40 +143,14 @@ export const User = () => {
       status: '0',
     },
   ];
-  const [tableData, setData] = useState([
-    {
-      id: '2',
-      phone: '13308041085',
-      username: '蛋糕',
-      discount: '0.8',
-      amount: '100',
-      balance: '20',
-      createDate: '1000',
-      remarks: '现金',
-    },
-    {
-      id: '3',
-      phone: '13308041085',
-      username: '蛋糕',
-      discount: '0.8',
-      amount: '100',
-      balance: '20',
-      createDate: '1000',
-      remarks: '现金',
-    },
-  ]);
-  const [search_form] = Form.useForm();
-  const pagination = {
-    defaultCurrent: 1,
-    defaultPageSize: 20,
-    pageSizeOptions: ['5', '10', '20', '30'],
-    showTotal: (total, range) => {
-      return range[0] + '-' + range[1] + ' 共' + total + '条';
-    },
-    showQuickJumper: true,
-    showSizeChanger: true,
-    total: 500,
+  const [tableData, setData] = useState([]);
+  const getChargeList = () => {
+    setData(dataSource);
   };
+  useEffect(() => {
+    getChargeList();
+  }, []);
+
   //点击用户充值
   const addCharge = () => {
     editUserModal.current.add();

@@ -54,7 +54,6 @@ const SidebarCs = () => {
     } else {
       setOpenKeys([]);
     }
-    // eslint-disable-next-line
   }, [router.location.pathname]);
 
   const handleClickItem = (e) => {

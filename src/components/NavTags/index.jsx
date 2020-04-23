@@ -20,7 +20,6 @@ export const NavTags = (props) => {
     if (!hasNavRouter.map((res) => res.path).includes(router.location.pathname)) {
       setHasNavRouter([...hasNavRouter, currentRoute]);
     }
-    // eslint-disable-next-line
   }, [router.location.pathname]);
 
   const onChange = (key) => {
@@ -60,14 +59,7 @@ export const NavTags = (props) => {
 
   return (
     <div>
-      <Tabs
-        defaultActiveKey="1"
-        type="editable-card"
-        activeKey={activeKey}
-        hideAdd
-        onChange={onChange}
-        onEdit={onEdit}
-      >
+      <Tabs defaultActiveKey="1" type="editable-card" activeKey={activeKey} hideAdd onChange={onChange} onEdit={onEdit}>
         {hasNavRouter.map((res) => (
           <TabPane tab={res.name} key={res.path}></TabPane>
         ))}

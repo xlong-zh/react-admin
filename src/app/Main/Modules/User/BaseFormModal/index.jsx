@@ -4,7 +4,7 @@ import { Modal, Form, Select, Input, message } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 
-export const EditUserModal = forwardRef((props, ref) => {
+export const BaseFormModal = forwardRef((props, ref) => {
   const [modal_form] = Form.useForm();
 
   const [modalConfig, setConfig] = useState({

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './user.module.scss';
-import { EditUserModal } from './EditUserModal';
+// import { SearchTabelFactory } from 'mixinFun/search_tabel_mixin';
+import { BaseFormModal } from './BaseFormModal';
 import { Space, Button, Form, Input, Select, Table, Popconfirm } from 'antd';
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 export const User = () => {
+  // const MixinFun = new SearchTabelFactory();
   const [search_form] = Form.useForm();
-  const editUserModal = useRef(null);
+  const baseFormModal = useRef(null);
   const pagination = {
     defaultCurrent: 1,
     defaultPageSize: 20,
@@ -148,16 +150,16 @@ export const User = () => {
     setData(dataSource);
   };
   useEffect(() => {
-    getChargeList();
+    getChargeList(dataSource);
   }, []);
 
   //点击用户充值
   const addCharge = () => {
-    editUserModal.current.add();
+    baseFormModal.current.add();
   };
   //编辑用户信息
   const editRecord = (params) => {
-    editUserModal.current.edit(params);
+    baseFormModal.current.edit(params);
   };
   //删除该条充值记录
   const delRecord = (params) => {
@@ -208,7 +210,7 @@ export const User = () => {
       <div className={styles.table_wrap}>
         <Table rowKey="id" size="middle" columns={columns} dataSource={tableData} pagination={pagination} />
       </div>
-      <EditUserModal ref={editUserModal} />
+      <BaseFormModal ref={baseFormModal} />
     </div>
   );
 };

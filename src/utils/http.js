@@ -57,3 +57,6 @@ axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
+
+
+export const http = _http;

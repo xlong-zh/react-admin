@@ -1,27 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './user.module.scss';
-// import { SearchTabelFactory } from 'mixinFun/search_tabel_mixin';
+import { http } from 'utils/http';
 import { BaseFormModal } from './BaseFormModal';
-import { Space, Button, Form, Input, Select, Table, Popconfirm } from 'antd';
+import { Space, Button, Form, Input, Select, Table, Popconfirm, message } from 'antd';
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 export const User = () => {
-  // const MixinFun = new SearchTabelFactory();
   const [search_form] = Form.useForm();
   const baseFormModal = useRef(null);
-  const pagination = {
-    defaultCurrent: 1,
-    defaultPageSize: 20,
-    pageSizeOptions: ['5', '10', '20', '30'],
-    showTotal: (total, range) => {
-      return range[0] + '-' + range[1] + ' 共' + total + '条';
-    },
-    showQuickJumper: true,
-    showSizeChanger: true,
-    total: 500,
-  };
+
   const columns = [
     {
       title: '用户账号',
@@ -76,7 +65,7 @@ export const User = () => {
               type="primary"
               size="small"
               onClick={() => {
-                editRecord(text);
+                editRecord(record);
               }}
             >
               编辑
@@ -85,7 +74,7 @@ export const User = () => {
               placement="topRight"
               title="是否确定删除本条充值记录"
               onConfirm={() => {
-                delRecord(text);
+                delRecord(record);
               }}
               okText="确定"
               cancelText="取消"
@@ -99,7 +88,19 @@ export const User = () => {
       ),
     },
   ];
-  const dataSource = [
+  const [tableLoading, setTableLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+    pageSizeOptions: ['5', '10', '20', '30'],
+    showTotal: (total, range) => {
+      return range[0] + '-' + range[1] + ' 共' + total + '条';
+    },
+    showQuickJumper: true,
+    showSizeChanger: true,
+    total: 500,
+  });
+  const [tableData, setData] = useState([
     {
       id: '2',
       phone: '13308041085',
@@ -111,47 +112,56 @@ export const User = () => {
       remarks: '现金',
       status: '0',
     },
-    {
-      id: '2',
-      phone: '13308041085',
-      username: '蛋糕',
-      discount: '0.8',
-      amount: '100',
-      balance: '20',
-      total: '1000',
-      remarks: '现金',
-      status: '0',
-    },
-    {
-      id: '2',
-      phone: '13308041085',
-      username: '蛋糕',
-      discount: '0.8',
-      amount: '100',
-      balance: '20',
-      total: '1000',
-      remarks: '现金',
-      status: '0',
-    },
-    {
-      id: '2',
-      phone: '13308041085',
-      username: '蛋糕',
-      discount: '0.8',
-      amount: '100',
-      balance: '20',
-      total: '1000',
-      remarks: '现金',
-      status: '0',
-    },
-  ];
-  const [tableData, setData] = useState([]);
-  const getChargeList = () => {
-    setData(dataSource);
+  ]);
+
+  // 获取table数据
+  const getTableData = async (page = {}) => {
+    const params = search_form.getFieldsValue();
+    setTableLoading(true);
+    const res = await http.get('/admin/member/list', {
+      params: {
+        pageNum: pagination.current,
+        pageSize: pagination.pageSize,
+        ...params,
+        ...page,
+      },
+    });
+    setTableLoading(false);
+    if (res.data.code == '200') {
+      setData(res.data.data.list);
+      setPagination({ ...pagination, total: res.data.data.total });
+    } else {
+      message.error(res.data.message);
+    }
   };
+  // 初始化
   useEffect(() => {
-    getChargeList(dataSource);
+    getTableData();
   }, []);
+  // 分页、排序、筛选变化时触发
+  const handleTableChange = (e) => {
+    setPagination({ ...pagination, ...e });
+    const page = {
+      pageNum: e.current,
+      pageSize: e.pageSize,
+    };
+    getTableData(page);
+  };
+
+  // 查询
+  const getSearch = () => {
+    getTableData();
+    console.log(search_form.getFieldsValue());
+  };
+  // 重置
+  const getResetting = () => {
+    search_form.resetFields();
+    const page = {
+      pageNum: 1,
+    };
+    getTableData(page);
+    console.log(search_form.getFieldsValue());
+  };
 
   //点击用户充值
   const addCharge = () => {
@@ -162,17 +172,16 @@ export const User = () => {
     baseFormModal.current.edit(params);
   };
   //删除该条充值记录
-  const delRecord = (params) => {
-    console.log(params);
-  };
-  // 查询
-  const getSearch = () => {
-    console.log(search_form.getFieldsValue());
-  };
-  // 重置
-  const getResetting = () => {
-    search_form.resetFields();
-    console.log(search_form.getFieldsValue());
+  const delRecord = async (params) => {
+    const res = await http.post('/admin/member/deleteMember', {
+      id: params.id,
+    });
+    if (res.data.code == '200') {
+      message.success('用户删除成功');
+      getTableData();
+    } else {
+      message.error(res.data.message);
+    }
   };
 
   return (
@@ -208,9 +217,17 @@ export const User = () => {
         </Form>
       </div>
       <div className={styles.table_wrap}>
-        <Table rowKey="id" size="middle" columns={columns} dataSource={tableData} pagination={pagination} />
+        <Table
+          rowKey="id"
+          size="middle"
+          loading={tableLoading}
+          columns={columns}
+          dataSource={tableData}
+          pagination={pagination}
+          onChange={handleTableChange}
+        />
       </div>
-      <BaseFormModal ref={baseFormModal} />
+      <BaseFormModal ref={baseFormModal} getTableData={getTableData} />
     </div>
   );
 };

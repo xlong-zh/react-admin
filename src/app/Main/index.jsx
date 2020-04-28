@@ -29,11 +29,11 @@ export const SiderDemo = () => {
         </Header>
 
         <Content
-          className={`${styles.site_layout_background} ${styles.site_layout_content}`}
+          className={`${styles.site_layout_background}`}
           style={{
             margin: '24px 16px',
             padding: 24,
-            minHeight: 280,
+            minHeight: '90vh',
           }}
         >
           {/* <Crumb/> */}

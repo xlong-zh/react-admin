@@ -118,16 +118,14 @@ export const User = () => {
   const getTableData = async (page = {}) => {
     const params = search_form.getFieldsValue();
     setTableLoading(true);
-    const res = await http.get('/admin/member/list', {
-      params: {
-        pageNum: pagination.current,
-        pageSize: pagination.pageSize,
-        ...params,
-        ...page,
-      },
+    const res = await http.post('/admin/member/list', {
+      pageNum: pagination.current,
+      pageSize: pagination.pageSize,
+      ...params,
+      ...page,
     });
     setTableLoading(false);
-    if (res.data.code == '200') {
+    if (res.data.code === '200') {
       setData(res.data.data.list);
       setPagination({ ...pagination, total: res.data.data.total });
     } else {
@@ -176,7 +174,7 @@ export const User = () => {
     const res = await http.post('/admin/member/deleteMember', {
       id: params.id,
     });
-    if (res.data.code == '200') {
+    if (res.data.code === '200') {
       message.success('用户删除成功');
       getTableData();
     } else {

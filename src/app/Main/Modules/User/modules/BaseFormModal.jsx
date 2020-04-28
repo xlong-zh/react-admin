@@ -40,7 +40,7 @@ export const BaseFormModal = forwardRef((props, ref) => {
       console.log(modalConfig.id);
       if (modalConfig.id) {
         // 编辑
-        method = 'put';
+        method = 'post';
         params.id = modalConfig.id;
       } else {
         //新增
@@ -48,15 +48,14 @@ export const BaseFormModal = forwardRef((props, ref) => {
       }
       console.log(params);
       setConfig({ ...modalConfig, confirmLoading: true });
-
-      const res = await http.request({
+      const res = await ajax.request({
         method: method,
         url: httpurl,
         data: params,
       });
       setConfig({ ...modalConfig, confirmLoading: false });
-      if (res.data.code == '200') {
-        message.success('修改用户信息成功!');
+      if (res.data.code === '200') {
+        message.success('操作成功!');
         setConfig({ ...modalConfig, visible: false });
         props.getTableData();
       } else {
@@ -89,7 +88,7 @@ export const BaseFormModal = forwardRef((props, ref) => {
             onBlur={blurSearch}
             rules={[{ required: true, message: '请输入用户账号' }]}
           >
-            <Input style={{ width: 200 }} />
+            <Input style={{ width: 200 }} disabled={modalConfig.id} />
           </Form.Item>
           <Form.Item label="会员折扣" name="discount" rules={[{ required: true, message: '请输入会员折扣' }]}>
             <Input style={{ width: 100 }} />
@@ -105,7 +104,7 @@ export const BaseFormModal = forwardRef((props, ref) => {
             name="remarks"
             rules={[{ required: true, message: '请输入备注' }]}
           >
-            <TextArea rows={4} className={{ width: '100%' }} />
+            <TextArea rows={3} className={{ width: '100%' }} />
           </Form.Item>
         </Form>
       </Modal>

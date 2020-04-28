@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './user.module.scss';
 import { http } from 'utils/http';
-import { BaseFormModal } from './BaseFormModal';
+import { BaseFormModal } from './modules/BaseFormModal';
 import { Space, Button, Form, Input, Select, Table, Popconfirm, message } from 'antd';
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 

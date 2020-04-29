@@ -40,7 +40,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => {
-    return response;
+    return response.data;
   },
   (error) => {
     console.error(error);
@@ -57,6 +57,5 @@ axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
-
 
 export const http = _http;

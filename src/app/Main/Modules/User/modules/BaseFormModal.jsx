@@ -4,6 +4,10 @@ import { http } from 'utils/http';
 
 const { Option } = Select;
 const { TextArea } = Input;
+const layout = {
+  labelCol: { span: 5 },
+  wrapperCol: { span: 16 },
+};
 
 export const BaseFormModal = forwardRef((props, ref) => {
   const [modal_form] = Form.useForm();
@@ -14,6 +18,7 @@ export const BaseFormModal = forwardRef((props, ref) => {
     visible: false,
     id: null,
   });
+  const [spinLoading, setSpinLoading] = useState(false);
   // ref暴露函数
   useImperativeHandle(ref, () => ({
     add,
@@ -48,18 +53,18 @@ export const BaseFormModal = forwardRef((props, ref) => {
       }
       console.log(params);
       setConfig({ ...modalConfig, confirmLoading: true });
-      const res = await ajax.request({
+      const res = await http.request({
         method: method,
         url: httpurl,
         data: params,
       });
       setConfig({ ...modalConfig, confirmLoading: false });
-      if (res.data.code === '200') {
+      if (res.code === 200) {
         message.success('操作成功!');
         setConfig({ ...modalConfig, visible: false });
         props.getTableData();
       } else {
-        message.error(res.data.message);
+        message.error(res.message);
       }
     });
   };
@@ -68,7 +73,25 @@ export const BaseFormModal = forwardRef((props, ref) => {
   };
   const blurSearch = (e) => {
     //失焦搜索用户
-    // console.log(e.target.value);
+    // const phone = e.target.value;
+    // setSpinLoading(true);
+    // const res = await http.post('/admin/member/getMemberByPhone', {
+    //   phone,
+    // });
+    // setSpinLoading(false);
+    // if (res.code === 200) {
+    //   if (res.data && res.data.id) {
+    //     modal_form.setFieldsValue({
+    //       ...res.data,
+    //     });
+    //     setMemberId(res.data.id);
+    //   } else {
+    //     message.error('该用户不存在');
+    //     modal_form.resetFields();
+    //   }
+    // } else {
+    //   message.error(res.message);
+    // }
   };
   const seleChange = () => {};
   return (
@@ -81,32 +104,34 @@ export const BaseFormModal = forwardRef((props, ref) => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <Form name="EditUserForm" form={modal_form} initialValues={{}}>
-          <Form.Item
-            label="用户账号"
-            name="phone"
-            onBlur={blurSearch}
-            rules={[{ required: true, message: '请输入用户账号' }]}
-          >
-            <Input style={{ width: 200 }} disabled={modalConfig.id} />
-          </Form.Item>
-          <Form.Item label="会员折扣" name="discount" rules={[{ required: true, message: '请输入会员折扣' }]}>
-            <Input style={{ width: 100 }} />
-          </Form.Item>
-          <Form.Item label="用户状态" name="status" rules={[{ required: true, message: '请选择用户状态' }]}>
-            <Select style={{ width: 100 }} onChange={seleChange} placeholder="请选择">
-              <Option value="1">激活</Option>
-              <Option value="0">未激活</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注"
-            name="remarks"
-            rules={[{ required: true, message: '请输入备注' }]}
-          >
-            <TextArea rows={3} className={{ width: '100%' }} />
-          </Form.Item>
-        </Form>
+        <Spin spinning={spinLoading}>
+          <Form name="EditUserForm" form={modal_form} initialValues={{}} {...layout}>
+            <Form.Item
+              label="用户账号"
+              name="phone"
+              onBlur={blurSearch}
+              rules={[{ required: true, message: '请输入用户账号' }]}
+            >
+              <Input style={{ width: 200 }} disabled={modalConfig.id} />
+            </Form.Item>
+            <Form.Item label="会员折扣" name="discount" rules={[{ required: true, message: '请输入会员折扣' }]}>
+              <Input style={{ width: 100 }} />
+            </Form.Item>
+            <Form.Item label="用户状态" name="status" rules={[{ required: true, message: '请选择用户状态' }]}>
+              <Select style={{ width: 100 }} onChange={seleChange} placeholder="请选择">
+                <Option value={1}>激活</Option>
+                <Option value={0}>未激活</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注"
+              name="remarks"
+              rules={[{ required: true, message: '请输入备注' }]}
+            >
+              <TextArea rows={3} className={{ width: '100%' }} />
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
     </div>
   );

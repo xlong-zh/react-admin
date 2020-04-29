@@ -46,7 +46,7 @@ export const User = () => {
       title: '状态',
       key: 'status',
       align: 'center',
-      render: (text) => <span>{text.status === '0' ? '未激活' : '激活'}</span>,
+      render: (text, record) => <span>{record.status === 0 ? '未激活' : '激活'}</span>,
     },
     {
       title: '备注',
@@ -116,7 +116,14 @@ export const User = () => {
 
   // 获取table数据
   const getTableData = async (page = {}) => {
-    const params = search_form.getFieldsValue();
+    let params = search_form.getFieldsValue();
+    const searchTime = params.date;
+    // 按需格式化时间参数
+    if (searchTime && searchTime.length) {
+      const startTime = searchTime[0].format('YYYY-MM-DD HH:mm:ss');
+      const endTime = searchTime[1].format('YYYY-MM-DD HH:mm:ss');
+      params = { ...params, date: null, startTime, endTime };
+    }
     setTableLoading(true);
     const res = await http.post('/admin/member/list', {
       pageNum: pagination.current,
@@ -125,11 +132,11 @@ export const User = () => {
       ...page,
     });
     setTableLoading(false);
-    if (res.data.code === '200') {
-      setData(res.data.data.list);
-      setPagination({ ...pagination, total: res.data.data.total });
+    if (res.code === 200) {
+      setData(res.data.list);
+      setPagination({ ...pagination, current: res.data.pageNum, pageSize: res.data.pageSize, total: res.data.total });
     } else {
-      message.error(res.data.message);
+      message.error(res.message);
     }
   };
   // 初始化
@@ -174,11 +181,11 @@ export const User = () => {
     const res = await http.post('/admin/member/deleteMember', {
       id: params.id,
     });
-    if (res.data.code === '200') {
+    if (res.code === 200) {
       message.success('用户删除成功');
       getTableData();
     } else {
-      message.error(res.data.message);
+      message.error(res.message);
     }
   };
 
@@ -202,8 +209,8 @@ export const User = () => {
           </Form.Item>
           <Form.Item label="状态" name="status">
             <Select style={{ width: 100 }} placeholder="请选择">
-              <Option value="1">激活</Option>
-              <Option value="0">未激活</Option>
+              <Option value={1}>激活</Option>
+              <Option value={0}>未激活</Option>
             </Select>
           </Form.Item>
           <Form.Item>

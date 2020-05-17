@@ -50,3 +50,18 @@ export function px2Number(value) {
 
   newThrow('px2Number', 'params type error');
 }
+
+export async function httpHeader(func, errFunc) {
+  try {
+    return await func();
+  } catch (err) {
+    if (errFunc) {
+      return errFunc(err);
+    }
+
+    if (res && res.message) {
+      message.error(res.message);
+    }
+    return false;
+  }
+}
